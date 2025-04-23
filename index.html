@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Family Game Scorekeeper</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- PWA Essentials -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#406343">
+  <link rel="icon" href="icon-192.png" type="image/png">
+</head>
+<body>
+  <!-- Hamburger Icon -->
+  <div id="menu-icon" onclick="toggleSidebar()">☰</div>
+
+  <!-- Sidebar Menu -->
+  <div id="sidebar">
+    <br>
+    <h2>Choose Game</h2>
+    <div class="sidebar-group">
+      <button onclick="toggleWingspanMenu()">🕊 Wingspan ▾</button>
+      <div id="wingspan-submenu" style="display: none; padding-left: 10px;">
+        <button onclick="selectWingspanTab('scorecard')">📋 Scorecard</button>
+        <button onclick="selectWingspanTab('running')">📊 Running Scoreboard</button>
+      </div>
+    </div>
+    <button onclick="selectGame('countdown')">🚀 3-2-1 Countdown</button>
+  </div>
+
+  <!-- Wingspan Section -->
+  <div class="container" id="wingspan-section">
+    <h1>Wingspan Scorekeeper</h1>
+
+    <!-- Scorecard -->
+    <div id="wingspan-scorecard-tab">
+      <table id="score-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th contenteditable="true" class="editable-header" data-default="Player 1">Player 1</th>
+            <th contenteditable="true" class="editable-header" data-default="Player 2">Player 2</th>
+            <th contenteditable="true" class="editable-header player-col" style="display: none;" data-default="Player 3">Player 3</th>
+            <th contenteditable="true" class="editable-header player-col" style="display: none;" data-default="Player 4">Player 4</th>
+            <th contenteditable="true" class="editable-header player-col" style="display: none;" data-default="Player 5">Player 5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Bird Points</td><td contenteditable="true"></td><td contenteditable="true"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td></tr>
+          <tr><td>End of Round Goals</td><td contenteditable="true"></td><td contenteditable="true"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td></tr>
+          <tr><td>Bonus Cards</td><td contenteditable="true"></td><td contenteditable="true"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td></tr>
+          <tr><td>Eggs</td><td contenteditable="true"></td><td contenteditable="true"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td></tr>
+          <tr><td>Food Tokens</td><td contenteditable="true"></td><td contenteditable="true"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td></tr>
+          <tr><td>Tucked Cards</td><td contenteditable="true"></td><td contenteditable="true"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td><td class="player-col" contenteditable="true" style="display: none;"></td></tr>
+          <tr><td><strong>Total</strong></td><td class="total"></td><td class="total"></td><td class="total player-col" style="display: none;"></td><td class="total player-col" style="display: none;"></td><td class="total player-col" style="display: none;"></td></tr>
+        </tbody>
+      </table>
+
+      <div style="text-align:center; margin-top: 10px;">
+        <button onclick="addWingspanPlayer()">+ Add Player</button>
+        <button onclick="removeWingspanPlayer()">− Remove Player</button>
+      </div>
+      <div style="text-align:center;">
+        <button onclick="updateBrandonMeridianScoreboard()">Log Winner</button>
+      </div>
+    </div>
+
+    <!-- Running Scoreboard Tab -->
+    <div id="wingspan-running-tab" style="display: none;">
+      <h2>Brandon vs. Meridian: Running Scoreboard</h2>
+      <p><strong>Brandon Wins:</strong> <span id="brandon-wins">0</span></p>
+      <p><strong>Meridian Wins:</strong> <span id="meridian-wins">0</span></p>
+    </div>
+  </div>
+
+  <!-- 3-2-1 Countdown Section -->
+  <div class="container" id="countdown-section" style="display:none;">
+    <h1>3-2-1 Countdown</h1>
+    <table id="countdown-input-table">
+      <thead>
+        <tr><th>Player</th><th>Hand Total</th><th>Countdown?</th><th>Blastoff?</th></tr>
+      </thead>
+      <tbody id="countdown-players"></tbody>
+    </table>
+
+    <button onclick="addCountdownPlayer()">+ Player</button>
+    <button onclick="removeCountdownPlayer()">− Player</button>
+    <button onclick="calculateCountdownScores()">Calculate</button>
+
+    <h3>Results</h3>
+    <ul id="countdown-results"></ul>
+    <h3>Round <span id="current-round">1</span> of 5</h3>
+
+    <h3>Total Scores</h3>
+    <ul id="total-scores"></ul>
+
+    <button onclick="previousRound()">← Previous Round</button>
+    <button onclick="nextRound()">Next Round</button>
+
+    <br><br><br>
+    <button id="reset-button" onclick="resetGame()">Reset Game</button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js").then(() => {
+        console.log("✅ Service Worker Registered");
+      });
+    }
+  </script>
+</body>
+</html>
