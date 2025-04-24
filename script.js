@@ -56,11 +56,16 @@ headerCells.forEach((cell, index) => {
 });
 
 window.addEventListener("load", () => {
-  headerCells[0].focus();
-  showTab("wingspan");
-  addCountdownPlayer();
-  addCountdownPlayer();
-});
+    headerCells[0].focus();
+    showTab("wingspan");
+    addCountdownPlayer();
+    addCountdownPlayer();
+  
+    // Load running scoreboard
+    document.getElementById("brandon-wins").textContent = localStorage.getItem("brandonWins") || "0";
+    document.getElementById("meridian-wins").textContent = localStorage.getItem("meridianWins") || "0";
+  });
+  
 
 // -----------------------------
 // Tab & Sidebar navigation
@@ -331,6 +336,51 @@ function removeCountdownPlayer() {
     alert("No players to remove!");
   }
 }
+
+function updateBrandonMeridianScoreboard() {
+    const headers = document.querySelectorAll(".editable-header");
+    const totals = document.querySelectorAll(".total");
+  
+    // Get trimmed player names
+    const names = Array.from(headers).map(cell => cell.textContent.trim().toLowerCase());
+  
+    // Only proceed if exactly two players: Brandon and Meridian
+    if (
+      names.filter(name => name === "brandon" || name === "meridian").length === 2 &&
+      names.length === 2
+    ) {
+      const brandonIndex = names.indexOf("brandon");
+      const meridianIndex = names.indexOf("meridian");
+  
+      const brandonScore = parseInt(totals[brandonIndex].textContent.trim()) || 0;
+      const meridianScore = parseInt(totals[meridianIndex].textContent.trim()) || 0;
+  
+      // Get current win counts
+      let brandonWins = parseInt(localStorage.getItem("brandonWins")) || 0;
+      let meridianWins = parseInt(localStorage.getItem("meridianWins")) || 0;
+  
+      if (brandonScore > meridianScore) {
+        brandonWins++;
+        alert("Brandon wins this game!");
+      } else if (meridianScore > brandonScore) {
+        meridianWins++;
+        alert("Meridian wins this game!");
+      } else {
+        alert("It's a tie!");
+      }
+  
+      // Save back to localStorage
+      localStorage.setItem("brandonWins", brandonWins);
+      localStorage.setItem("meridianWins", meridianWins);
+  
+      // Update UI
+      document.getElementById("brandon-wins").textContent = brandonWins;
+      document.getElementById("meridian-wins").textContent = meridianWins;
+    } else {
+      alert("Please make sure only Brandon and Meridian are playing.");
+    }
+  }
+  
 
 // -----------------------------
 // Register Service Worker (PWA)
