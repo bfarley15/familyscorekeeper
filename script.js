@@ -341,33 +341,52 @@ function updateBrandonMeridianScoreboard() {
     const headers = document.querySelectorAll(".editable-header");
     const totals = document.querySelectorAll(".total");
   
-    // Get trimmed player names
-    const names = Array.from(headers).map(cell => cell.textContent.trim().toLowerCase());
+    // Get all visible, non-empty names (lowercased for comparison)
+    const names = Array.from(headers)
+      .map((cell, i) => ({
+        name: cell.textContent.trim().toLowerCase(),
+        visible: cell.offsetParent !== null, // only check visible headers
+        index: i
+      }))
+      .filter(p => p.visible && p.name !== "");
   
-    // Only proceed if exactly two players: Brandon and Meridian
-    if (
-      names.filter(name => name === "brandon" || name === "meridian").length === 2 &&
-      names.length === 2
-    ) {
-      const brandonIndex = names.indexOf("brandon");
-      const meridianIndex = names.indexOf("meridian");
+    if (names.length !== 2) {
+      alert("Please enter exactly two player names.");
+      return;
+    }
   
-      const brandonScore = parseInt(totals[brandonIndex].textContent.trim()) || 0;
-      const meridianScore = parseInt(totals[meridianIndex].textContent.trim()) || 0;
+    const nameSet = new Set(names.map(n => n.name));
+    if (!nameSet.has("brandon") || !nameSet.has("meridian")) {
+      alert("Please make sure only Brandon and Meridian are playing.");
+      return;
+    }
   
-      // Get current win counts
-      let brandonWins = parseInt(localStorage.getItem("brandonWins")) || 0;
-      let meridianWins = parseInt(localStorage.getItem("meridianWins")) || 0;
+    const brandonPlayer = names.find(n => n.name === "brandon");
+    const meridianPlayer = names.find(n => n.name === "meridian");
   
-      if (brandonScore > meridianScore) {
-        brandonWins++;
-        alert("Brandon wins this game!");
-      } else if (meridianScore > brandonScore) {
-        meridianWins++;
-        alert("Meridian wins this game!");
-      } else {
-        alert("It's a tie!");
-      }
+    const brandonScore = parseInt(totals[brandonPlayer.index].textContent.trim()) || 0;
+    const meridianScore = parseInt(totals[meridianPlayer.index].textContent.trim()) || 0;
+  
+    let brandonWins = parseInt(localStorage.getItem("brandonWins")) || 0;
+    let meridianWins = parseInt(localStorage.getItem("meridianWins")) || 0;
+  
+    if (brandonScore > meridianScore) {
+      brandonWins++;
+      alert("Brandon wins this game!");
+    } else if (meridianScore > brandonScore) {
+      meridianWins++;
+      alert("Meridian wins this game!");
+    } else {
+      alert("It's a tie!");
+    }
+  
+    localStorage.setItem("brandonWins", brandonWins);
+    localStorage.setItem("meridianWins", meridianWins);
+  
+    document.getElementById("brandon-wins").textContent = brandonWins;
+    document.getElementById("meridian-wins").textContent = meridianWins;
+  }
+  
   
       // Save back to localStorage
       localStorage.setItem("brandonWins", brandonWins);
