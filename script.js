@@ -31,18 +31,17 @@ document.addEventListener("input", function () {
 // -----------------------------
 // Editable player headers
 // -----------------------------
-const editedHeaders = new Set();
 const headerCells = document.querySelectorAll(".editable-header");
 
 headerCells.forEach((cell, index) => {
   const defaultText = cell.dataset.default;
 
   cell.addEventListener("focus", () => {
-    if (!editedHeaders.has(index) || cell.textContent === defaultText) {
+    // If cell still has default text, select it for easy overwrite
+    if (cell.textContent === defaultText) {
       cell.textContent = "";
-      cell.classList.remove("filled");
-      editedHeaders.add(index);
     }
+    cell.classList.remove("filled");
   });
 
   cell.addEventListener("blur", () => {
@@ -53,7 +52,15 @@ headerCells.forEach((cell, index) => {
       cell.classList.add("filled");
     }
   });
+
+  // Optional: Remove default placeholder on first keydown
+  cell.addEventListener("keydown", (e) => {
+    if (cell.textContent === defaultText) {
+      cell.textContent = "";
+    }
+  });
 });
+
 
 window.addEventListener("load", () => {
     headerCells[0].focus();
@@ -341,31 +348,31 @@ function updateBrandonMeridianScoreboard() {
     const headers = document.querySelectorAll(".editable-header");
     const totals = document.querySelectorAll(".total");
   
-    // Get all visible, non-empty names (lowercased for comparison)
-    const names = Array.from(headers)
-      .map((cell, i) => ({
+    // Get visible, non-empty player names
+    const players = Array.from(headers)
+      .map((cell, index) => ({
         name: cell.textContent.trim().toLowerCase(),
-        visible: cell.offsetParent !== null, // only check visible headers
-        index: i
+        index: index,
+        visible: cell.offsetParent !== null
       }))
-      .filter(p => p.visible && p.name !== "");
+      .filter(p => p.visible && p.name);
   
-    if (names.length !== 2) {
-      alert("Please enter exactly two player names.");
+    if (players.length !== 2) {
+      alert("Please enter exactly two players.");
       return;
     }
   
-    const nameSet = new Set(names.map(n => n.name));
-    if (!nameSet.has("brandon") || !nameSet.has("meridian")) {
+    const names = players.map(p => p.name);
+    if (!names.includes("brandon") || !names.includes("meridian")) {
       alert("Please make sure only Brandon and Meridian are playing.");
       return;
     }
   
-    const brandonPlayer = names.find(n => n.name === "brandon");
-    const meridianPlayer = names.find(n => n.name === "meridian");
+    const brandonIndex = players.find(p => p.name === "brandon").index;
+    const meridianIndex = players.find(p => p.name === "meridian").index;
   
-    const brandonScore = parseInt(totals[brandonPlayer.index].textContent.trim()) || 0;
-    const meridianScore = parseInt(totals[meridianPlayer.index].textContent.trim()) || 0;
+    const brandonScore = parseInt(totals[brandonIndex].textContent.trim()) || 0;
+    const meridianScore = parseInt(totals[meridianIndex].textContent.trim()) || 0;
   
     let brandonWins = parseInt(localStorage.getItem("brandonWins")) || 0;
     let meridianWins = parseInt(localStorage.getItem("meridianWins")) || 0;
@@ -386,6 +393,7 @@ function updateBrandonMeridianScoreboard() {
     document.getElementById("brandon-wins").textContent = brandonWins;
     document.getElementById("meridian-wins").textContent = meridianWins;
   }
+  
   
   
       // Save back to localStorage
