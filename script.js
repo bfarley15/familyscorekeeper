@@ -1,5 +1,6 @@
+
 // -----------------------------
-// Global state variables
+// Global State
 // -----------------------------
 let cumulativeScores = {};
 let currentRound = 1;
@@ -10,35 +11,59 @@ const maxCountdownPlayers = 8;
 let wingspanPlayerCount = 2;
 
 // -----------------------------
-// Auto-calculate Wingspan totals
+// DOM Ready Logic
 // -----------------------------
-document.addEventListener("input", function () {
-  const table = document.getElementById("score-table");
-  const rows = table.querySelectorAll("tbody tr");
-  const numPlayers = 5;
-
-  for (let col = 1; col <= numPlayers; col++) {
-    let sum = 0;
-    for (let row = 0; row < 6; row++) {
-      const cell = rows[row].children[col];
-      const value = parseInt(cell.textContent.trim()) || 0;
-      sum += value;
-    }
-    rows[6].children[col].textContent = sum;
-  }
+window.addEventListener("load", () => {
+  showTab("wingspan");
+  addCountdownPlayer();
+  addCountdownPlayer();
+  updateRunningScoreboard();
+  const headerCells = document.querySelectorAll(".editable-header");
+  if (headerCells[0]) headerCells[0].focus();
 });
 
 // -----------------------------
-// Editable player headers
+// Sidebar & Navigation
 // -----------------------------
-const headerCells = document.querySelectorAll(".editable-header");
+function toggleSidebar() {
+  document.body.classList.toggle("sidebar-open");
+}
 
-headerCells.forEach((cell, index) => {
+function showTab(tabName) {
+  document.getElementById("wingspan-section").style.display = tabName === "wingspan" ? "block" : "none";
+  document.getElementById("countdown-section").style.display = tabName === "countdown" ? "block" : "none";
+  updateHamburgerColor(); // ← add this line
+}
+
+
+function selectGame(tabName) {
+  showTab(tabName);
+  toggleSidebar();
+}
+
+function toggleWingspanMenu() {
+  const menu = document.getElementById("wingspan-submenu");
+  menu.style.display = menu.style.display === "none" ? "block" : "none";
+}
+
+function updateHamburgerColor() {
+  const activeHeader = document.querySelector('#wingspan-section').style.display !== "none"
+    ? document.querySelector('#wingspan-section .screen-title')
+    : document.querySelector('#countdown-section .screen-title');
+
+  const color = window.getComputedStyle(activeHeader).color;
+  document.querySelector(".hamburger").style.color = color;
+}
+
+
+// -----------------------------
+// Editable Headers
+// -----------------------------
+document.querySelectorAll(".editable-header").forEach(cell => {
   const defaultText = cell.dataset.default;
 
   cell.addEventListener("focus", () => {
-    // If cell still has default text, select it for easy overwrite
-    if (cell.textContent === defaultText) {
+    if (cell.textContent.trim() === defaultText) {
       cell.textContent = "";
     }
     cell.classList.remove("filled");
@@ -53,72 +78,32 @@ headerCells.forEach((cell, index) => {
     }
   });
 
-  // Optional: Remove default placeholder on first keydown
-  cell.addEventListener("keydown", (e) => {
-    if (cell.textContent === defaultText) {
-      cell.textContent = "";
+  // Use input event instead of keydown for better typing feedback
+  cell.addEventListener("input", () => {
+    if (cell.textContent.trim() !== "" && cell.textContent !== defaultText) {
+      cell.classList.add("filled");
     }
   });
 });
 
 
-window.addEventListener("load", () => {
-    headerCells[0].focus();
-    showTab("wingspan");
-    addCountdownPlayer();
-    addCountdownPlayer();
-  
-    // Load running scoreboard
-    document.getElementById("brandon-wins").textContent = localStorage.getItem("brandonWins") || "0";
-    document.getElementById("meridian-wins").textContent = localStorage.getItem("meridianWins") || "0";
-  });
-  
-
 // -----------------------------
-// Tab & Sidebar navigation
-// -----------------------------
-function showTab(tabName) {
-  const wingspan = document.getElementById("wingspan-section");
-  const countdown = document.getElementById("countdown-section");
-  wingspan.style.display = tabName === "wingspan" ? "block" : "none";
-  countdown.style.display = tabName === "countdown" ? "block" : "none";
-}
-
-function toggleSidebar() {
-  document.body.classList.toggle("sidebar-open");
-}
-
-function selectGame(tabName) {
-  toggleSidebar();
-  showTab(tabName);
-}
-
-function toggleWingspanMenu() {
-  const menu = document.getElementById("wingspan-submenu");
-  menu.style.display = menu.style.display === "none" ? "block" : "none";
-}
-
-function selectWingspanTab(tabName) {
-  showTab("wingspan");
-  document.getElementById("wingspan-scorecard-tab").style.display = tabName === "scorecard" ? "block" : "none";
-  document.getElementById("wingspan-running-tab").style.display = tabName === "running" ? "block" : "none";
-  toggleSidebar();
-}
-
-// -----------------------------
-// Dynamic Wingspan Player Columns
+// Wingspan Player Controls
 // -----------------------------
 function addWingspanPlayer() {
-  if (wingspanPlayerCount >= 5) return;
-  wingspanPlayerCount++;
-  updateWingspanPlayerColumns();
+  if (wingspanPlayerCount < 5) {
+    wingspanPlayerCount++;
+    updateWingspanPlayerColumns();
+  }
 }
 
 function removeWingspanPlayer() {
-  if (wingspanPlayerCount <= 2) return;
-  hideWingspanColumn(wingspanPlayerCount);
-  wingspanPlayerCount--;
+  if (wingspanPlayerCount > 2) {
+    hideWingspanColumn(wingspanPlayerCount);
+    wingspanPlayerCount--;
+  }
 }
+
 
 function updateWingspanPlayerColumns() {
   for (let i = 3; i <= 5; i++) {
@@ -130,38 +115,137 @@ function updateWingspanPlayerColumns() {
   }
 }
 
-function showWingspanColumn(colIndex) {
-  const table = document.getElementById("score-table");
-  const headerCell = table.querySelector(`thead tr th:nth-child(${colIndex + 1})`);
-  if (headerCell) headerCell.style.display = "";
 
-  const rows = table.querySelectorAll("tbody tr");
-  rows.forEach(row => {
-    const cell = row.children[colIndex];
+function showWingspanColumn(i) {
+  // Adjust because i = 3 is actually the 4th column in the DOM (nth-child is 1-based)
+  const th = document.querySelector(`thead tr th:nth-child(${i + 1})`);
+  if (th) th.style.display = "";
+
+  document.querySelectorAll("tbody tr").forEach(row => {
+    const cell = row.children[i];
     if (cell) cell.style.display = "";
   });
 }
 
-function hideWingspanColumn(colIndex) {
-  const table = document.getElementById("score-table");
-  const headerCell = table.querySelector(`thead tr th:nth-child(${colIndex + 1})`);
-  if (headerCell) {
-    headerCell.style.display = "none";
-    headerCell.textContent = headerCell.dataset.default;
+function hideWingspanColumn(i) {
+  const th = document.querySelector(`thead tr th:nth-child(${i + 1})`);
+  if (th) {
+    th.style.display = "none";
+    th.textContent = th.dataset.default;
   }
 
-  const rows = table.querySelectorAll("tbody tr");
-  rows.forEach(row => {
-    const cell = row.children[colIndex];
+  document.querySelectorAll("tbody tr").forEach(row => {
+    const cell = row.children[i];
     if (cell) {
-      cell.textContent = "";
       cell.style.display = "none";
+      if (cell.querySelector("input")) cell.querySelector("input").value = "";
     }
   });
 }
 
+
+function showWingspanTab(tab) {
+  document.getElementById("wingspan-scorecard-tab").style.display = tab === "scorecard" ? "block" : "none";
+  document.getElementById("wingspan-running-tab").style.display = tab === "running" ? "block" : "none";
+
+  // Optional: visual indicator for selected tab
+  document.getElementById("scorecard-tab-btn").classList.toggle("active", tab === "scorecard");
+  document.getElementById("running-tab-btn").classList.toggle("active", tab === "running");
+
+  if (tab === "running") {
+    drawWinHistoryChart();
+  }
+}
+
+function selectWingspanSubTab(tabName) {
+  document.getElementById("wingspan-scorecard-tab").style.display = tabName === "scorecard" ? "block" : "none";
+  document.getElementById("wingspan-running-tab").style.display = tabName === "running" ? "block" : "none";
+}
+
+
+
 // -----------------------------
-// Countdown Game Logic
+// Wingspan Auto-Scoring
+// -----------------------------
+document.addEventListener("input", () => {
+  const table = document.getElementById("score-table");
+  const rows = table.querySelectorAll("tbody tr");
+  const numPlayers = 5;
+
+  for (let col = 1; col <= numPlayers; col++) {
+    let sum = 0;
+
+    // Loop through first 6 rows (each scoring category)
+    for (let row = 0; row < 6; row++) {
+      const input = rows[row].children[col]?.querySelector("input");
+      const value = parseInt(input?.value) || 0;
+      sum += value;
+    }
+
+    // Update the total in row 7 (index 6)
+    const totalCell = rows[6].children[col];
+    if (totalCell) {
+      totalCell.textContent = sum;
+    }
+  }
+});
+
+
+// -----------------------------
+// Countdown: Add / Remove Players
+// -----------------------------
+function addCountdownPlayer() {
+  if (countdownPlayerCount >= maxCountdownPlayers) {
+    alert("Max 8 players.");
+    return;
+  }
+
+  countdownPlayerCount++;
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td><input type="text" class="cd-player" placeholder="Player ${countdownPlayerCount}" /></td>
+    <td><input type="number" class="cd-hand" /></td>
+    <td><input type="checkbox" class="cd-countdown" /></td>
+    <td><input type="checkbox" class="cd-blastoff" /></td>
+  `;
+  document.getElementById("countdown-players").appendChild(row);
+}
+
+
+function removeCountdownPlayer() {
+  const table = document.getElementById("countdown-players");
+  if (table.children.length > 0) {
+    table.removeChild(table.lastElementChild);
+    countdownPlayerCount--;
+  }
+}
+
+// -----------------------------
+// Countdown: Game Logic (Calculate Scores, Rounds)
+// -----------------------------
+// [ ... existing calculateCountdownScores, nextRound, previousRound, resetGame functions go here ... ]
+
+
+
+function selectWingspanTab(tabName) {
+  showTab("wingspan");
+  document.getElementById("wingspan-scorecard-tab").style.display = tabName === "scorecard" ? "block" : "none";
+  document.getElementById("wingspan-running-tab").style.display = tabName === "running" ? "block" : "none";
+
+  // Highlight the active tab
+  document.getElementById("tab-scorecard").classList.toggle("active", tabName === "scorecard");
+  document.getElementById("tab-running").classList.toggle("active", tabName === "running");
+
+  // Only draw chart if switching to running tab
+  if (tabName === "running") {
+    drawWinHistoryChart();
+  }
+}
+
+
+
+// -----------------------------
+// Countdown: Game Logic (Partial)
 // -----------------------------
 function calculateCountdownScores() {
   const players = Array.from(document.querySelectorAll(".cd-player")).map(input => input.value.trim() || "Player");
@@ -184,32 +268,20 @@ function calculateCountdownScores() {
 
   if (blastoffPlayer) {
     blastoffPlayer.points = 3;
-    const ranked = entries.map(p => ({ ...p })).sort((a, b) => a.hand - b.hand);
-    let currentRank = 2;
-    let lastScore = null;
-    let rankCount = 0;
-
-    for (let i = 0; i < ranked.length; i++) {
-      const p = ranked[i];
-      if (p.name === blastoffPlayer.name) continue;
-      if (lastScore === null || p.hand !== lastScore) {
-        rankCount++;
-        lastScore = p.hand;
-      }
-      if (rankCount === 1) p.points = 2;
-      else if (rankCount === 2) p.points = 1;
-    }
+    const ranked = entries.filter(p => p.name !== blastoffPlayer.name).sort((a, b) => a.hand - b.hand);
+    if (ranked[0]) ranked[0].points = 2;
+    if (ranked[1]) ranked[1].points = 1;
   } else {
     const ranked = entries.map(p => ({ ...p })).sort((a, b) => a.hand - b.hand);
     const scoreMap = new Map();
-    let rank = 0, lastValue = null, rankCount = 0;
+    let rank = 0, last = null, rankCount = 0;
 
     for (let i = 0; i < ranked.length; i++) {
       const val = ranked[i].hand;
-      if (val !== lastValue) {
+      if (val !== last) {
         rankCount++;
         rank = rankCount;
-        lastValue = val;
+        last = val;
       }
       if (rank === 1) scoreMap.set(val, 3);
       else if (rank === 2) scoreMap.set(val, 2);
@@ -221,9 +293,9 @@ function calculateCountdownScores() {
 
     const countdownPlayer = entries.find(p => p.countdown);
     if (countdownPlayer) {
-      const minHand = Math.min(...entries.map(p => p.hand));
-      if (countdownPlayer.hand > minHand) countdownPlayer.points = 0;
-      else if (countdownPlayer.hand === minHand) countdownPlayer.points += 1;
+      const min = Math.min(...entries.map(p => p.hand));
+      if (countdownPlayer.hand > min) countdownPlayer.points = 0;
+      else if (countdownPlayer.hand === min) countdownPlayer.points += 1;
     }
   }
 
@@ -232,23 +304,16 @@ function calculateCountdownScores() {
     cumulativeScores[player.name] += player.points;
   });
 
-  // Sorted display
+  const sortedTotals = Object.entries(cumulativeScores).sort((a, b) => b[1] - a[1]);
   const totalList = document.getElementById("total-scores");
   totalList.innerHTML = "";
-  const sortedTotals = Object.entries(cumulativeScores).sort((a, b) => b[1] - a[1]);
-  sortedTotals.forEach(([name, total]) => {
+  sortedTotals.forEach(([name, score]) => {
     const li = document.createElement("li");
-    li.textContent = `${name}: ${total} point${total !== 1 ? "s" : ""}`;
+    li.textContent = `${name}: ${score} point${score !== 1 ? "s" : ""}`;
     totalList.appendChild(li);
   });
 
-  roundHistory[currentRound - 1] = entries.map(p => ({
-    name: p.name,
-    hand: p.hand,
-    countdown: p.countdown,
-    blastoff: p.blastoff,
-    points: p.points
-  }));
+  roundHistory[currentRound - 1] = entries;
 }
 
 function loadRound(roundNumber) {
@@ -315,105 +380,192 @@ function resetGame() {
   document.querySelectorAll(".cd-blastoff").forEach(box => box.checked = false);
 }
 
-// -----------------------------
-// Countdown Player Add/Remove
-// -----------------------------
-function addCountdownPlayer() {
-  if (countdownPlayerCount >= maxCountdownPlayers) {
-    alert("Maximum of 8 players reached.");
-    return;
-  }
-  countdownPlayerCount++;
-  const row = document.createElement("tr");
-  row.innerHTML = `
-    <td><input type="text" class="cd-player" placeholder="Player ${countdownPlayerCount}" /></td>
-    <td><input type="number" class="cd-hand" /></td>
-    <td><input type="checkbox" class="cd-countdown" /></td>
-    <td><input type="checkbox" class="cd-blastoff" /></td>
-  `;
-  document.getElementById("countdown-players").appendChild(row);
+function updateRunningScoreboard() {
+  document.getElementById("brandon-wins").textContent = localStorage.getItem("brandonWins") || "0";
+  document.getElementById("meridian-wins").textContent = localStorage.getItem("meridianWins") || "0";
 }
 
-function removeCountdownPlayer() {
-  const tableBody = document.getElementById("countdown-players");
-  if (countdownPlayerCount > 0) {
-    tableBody.removeChild(tableBody.lastElementChild);
-    countdownPlayerCount--;
-  } else {
-    alert("No players to remove!");
-  }
-}
 
-function updateBrandonMeridianScoreboard() {
-    const headers = document.querySelectorAll(".editable-header");
-    const totals = document.querySelectorAll(".total");
-  
-    // Get visible, non-empty player names
-    const players = Array.from(headers)
-      .map((cell, index) => ({
-        name: cell.textContent.trim().toLowerCase(),
-        index: index,
-        visible: cell.offsetParent !== null
-      }))
-      .filter(p => p.visible && p.name);
-  
-    if (players.length !== 2) {
-      alert("Please enter exactly two players.");
-      return;
-    }
-  
-    const names = players.map(p => p.name);
-    if (!names.includes("brandon") || !names.includes("meridian")) {
-      alert("Please make sure only Brandon and Meridian are playing.");
-      return;
-    }
-  
-    const brandonIndex = players.find(p => p.name === "brandon").index;
-    const meridianIndex = players.find(p => p.name === "meridian").index;
-  
-    const brandonScore = parseInt(totals[brandonIndex].textContent.trim()) || 0;
-    const meridianScore = parseInt(totals[meridianIndex].textContent.trim()) || 0;
-  
-    let brandonWins = parseInt(localStorage.getItem("brandonWins")) || 0;
-    let meridianWins = parseInt(localStorage.getItem("meridianWins")) || 0;
-  
-    if (brandonScore > meridianScore) {
-      brandonWins++;
-      alert("Brandon wins this game!");
-    } else if (meridianScore > brandonScore) {
-      meridianWins++;
-      alert("Meridian wins this game!");
-    } else {
-      alert("It's a tie!");
-    }
-  
-    localStorage.setItem("brandonWins", brandonWins);
-    localStorage.setItem("meridianWins", meridianWins);
-  
-    document.getElementById("brandon-wins").textContent = brandonWins;
-    document.getElementById("meridian-wins").textContent = meridianWins;
-  }
-  
-  
-  
-      // Save back to localStorage
-      localStorage.setItem("brandonWins", brandonWins);
-      localStorage.setItem("meridianWins", meridianWins);
-  
-      // Update UI
-      document.getElementById("brandon-wins").textContent = brandonWins;
-      document.getElementById("meridian-wins").textContent = meridianWins;
-    } else {
-      alert("Please make sure only Brandon and Meridian are playing.");
-    }
-  }
-  
+// Create chart after DOM is loaded
+function drawWinHistoryChart() {
+  const data = getCurrentMonthWinHistory();
+  const labels = data.map(entry => entry.date.slice(0, 10));
+  const brandon = data.map(e => e.winner === "Brandon" ? 1 : 0);
+  const meridian = data.map(e => e.winner === "Meridian" ? 1 : 0);
 
-// -----------------------------
-// Register Service Worker (PWA)
-// -----------------------------
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").then(() => {
-    console.log("✅ Service Worker registered");
+  const canvas = document.getElementById("winHistoryChart");
+  if (!canvas) return; // safeguard
+  const ctx = canvas.getContext("2d");
+
+  if (window.winChart) window.winChart.destroy(); // Clear previous chart
+
+  window.winChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: "Brandon", data: brandon, borderColor: "blue", fill: false, tension: 0.1 },
+        { label: "Meridian", data: meridian, borderColor: "green", fill: false, tension: 0.1 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "top" }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1 }
+        }
+      }
+    }
   });
 }
+
+
+
+
+
+function updateBrandonMeridianScoreboard() {
+  const headers = document.querySelectorAll(".editable-header");
+  const totals = document.querySelectorAll(".total");
+
+  const players = Array.from(headers).map((cell, i) => ({
+    name: cell.textContent.trim().toLowerCase(),
+    index: i,
+    visible: cell.offsetParent !== null
+  })).filter(p => p.visible && p.name);
+
+  if (players.length !== 2) {
+    alert("Please enter exactly two players.");
+    return;
+  }
+
+  const names = players.map(p => p.name);
+  if (!names.includes("brandon") || !names.includes("meridian")) {
+    alert("Only Brandon and Meridian can be logged.");
+    return;
+  }
+
+  const brandonIndex = players.find(p => p.name === "brandon").index;
+  const meridianIndex = players.find(p => p.name === "meridian").index;
+
+  const brandonScore = parseInt(totals[brandonIndex].textContent.trim()) || 0;
+  const meridianScore = parseInt(totals[meridianIndex].textContent.trim()) || 0;
+
+  let brandonWins = parseInt(localStorage.getItem("brandonWins")) || 0;
+  let meridianWins = parseInt(localStorage.getItem("meridianWins")) || 0;
+
+  if (brandonScore > meridianScore) {
+    brandonWins++;
+    alert("Brandon wins this game!");
+    logWinToHistory("Brandon");
+  } else if (meridianScore > brandonScore) {
+    meridianWins++;
+    alert("Meridian wins this game!");
+    logWinToHistory("Meridian");
+  }
+  
+
+  localStorage.setItem("brandonWins", brandonWins);
+  localStorage.setItem("meridianWins", meridianWins);
+  updateRunningScoreboard();
+
+    // Save scores to an array in localStorage
+    const brandonHistory = JSON.parse(localStorage.getItem("brandonScores") || "[]");
+    const meridianHistory = JSON.parse(localStorage.getItem("meridianScores") || "[]");
+  
+    brandonHistory.push(brandonScore);
+    meridianHistory.push(meridianScore);
+  
+    localStorage.setItem("brandonScores", JSON.stringify(brandonHistory));
+    localStorage.setItem("meridianScores", JSON.stringify(meridianHistory));
+  
+    // Calculate and display averages
+    const brandonAvg = Math.round(brandonHistory.reduce((a, b) => a + b, 0) / brandonHistory.length);
+    const meridianAvg = Math.round(meridianHistory.reduce((a, b) => a + b, 0) / meridianHistory.length);
+  
+    document.getElementById("brandon-avg").textContent = brandonAvg || 0;
+    document.getElementById("meridian-avg").textContent = meridianAvg || 0;
+  
+}
+
+function logWinToHistory(winner) {
+  const history = JSON.parse(localStorage.getItem("winHistory") || "[]");
+  history.push({ winner, date: new Date().toISOString() });
+  localStorage.setItem("winHistory", JSON.stringify(history));
+}
+
+function getCurrentMonthWinHistory() {
+  const history = JSON.parse(localStorage.getItem("winHistory") || "[]");
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear = now.getFullYear();
+
+  return history.filter(entry => {
+    const date = new Date(entry.date);
+    return date.getMonth() === thisMonth && date.getFullYear() === thisYear;
+  });
+}
+
+function drawWinHistoryChart() {
+  const data = getCurrentMonthWinHistory();
+  const labels = data.map(entry => entry.date.slice(0, 10));
+  const brandon = data.map(e => e.winner === "Brandon" ? 1 : 0);
+  const meridian = data.map(e => e.winner === "Meridian" ? 1 : 0);
+
+  const ctx = document.getElementById("winHistoryChart").getContext("2d");
+  if (window.winChart) window.winChart.destroy(); // Clear previous chart
+
+  window.winChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: "Brandon", data: brandon, borderColor: "green", fill: false, tension: 0.1 },
+        { label: "Meridian", data: meridian, borderColor: "blue", fill: false, tension: 0.1 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "top" }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+}
+
+function resetBrandonMeridianScoreboard() {
+  if (confirm("Are you sure you want to reset all Brandon vs. Meridian data?")) {
+    localStorage.removeItem("brandonWins");
+    localStorage.removeItem("meridianWins");
+    localStorage.removeItem("brandonScores");
+    localStorage.removeItem("meridianScores");
+    localStorage.removeItem("winHistory");
+
+    updateRunningScoreboard();
+    drawWinHistoryChart();
+    alert("Scoreboard reset!");
+  }
+}
+
+
+
+
+// -----------------------------
+// PWA Service Worker
+// -----------------------------
+// if ("serviceWorker" in navigator) {
+// navigator.serviceWorker.register("sw.js").then(() => {
+//    console.log("✅ Service Worker Registered");
+//  });
+// }

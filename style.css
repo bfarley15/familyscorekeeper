@@ -1,247 +1,299 @@
-/* -----------------------------
-   Shared Styles / Resets
------------------------------ */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: sans-serif;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    overscroll-behavior-y: none;
-    scroll-behavior: smooth;
-  }
-  
-  button {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin: 5px;
-  }
-  
-  input[type="text"],
-  input[type="number"] {
-    padding: 6px;
-    font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-  }
-  
-  th, td {
-    padding: 10px;
-    border: 1px solid #ccc;
-    text-align: center;
-  }
-  
-  /* -----------------------------
-       Wingspan Theme
-  ----------------------------- */
+/* -----------------------------------
+   Base Reset and Shared Styles
+----------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  line-height: 1.5;
+  background-color: #fff;
+  overflow-x: hidden;
+}
+
+/* Inputs, buttons, tables */
+input, button, textarea {
+  font-family: inherit;
+}
+
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 5px;
+}
+
+input[type="text"],
+input[type="number"] {
+  padding: 6px;
+  font-size: 1rem;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+/* -----------------------------------
+   Wingspan Theme 🌿
+----------------------------------- */
+#wingspan-section {
+  background-color: #f1efe7;
+  color: #3d3d3d;
+  font-family: 'Cormorant Garamond', serif;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+#wingspan-section h1 {
+  font-size: 2.5rem;
+  color: #406343;
+  text-align: center;
+}
+
+#wingspan-section table th,
+#wingspan-section table td {
+  background-color: #fffdf8;
+}
+
+.editable-header {
+  padding: 4px 8px;              /* Reduce vertical & horizontal padding */
+  min-width: 60px;               /* Prevent stretching too wide */
+  max-width: 100px;              /* Limit how wide a name can go */
+  overflow: hidden;              /* Hide overflow text */
+  text-overflow: ellipsis;      /* Show "..." if name is too long */
+  white-space: nowrap;          /* Prevent line breaks */
+}
+
+
+#wingspan-section .editable-header {
+  background-color: #e9f5ea;
+  color: #5d7354;
+  font-style: italic;
+}
+
+#wingspan-section .editable-header.filled {
+  color: #3b4b38;
+  font-style: normal;
+}
+
+#wingspan-section .total {
+  background-color: #dff5dc;
+  font-weight: bold;
+}
+
+.bottom-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding-bottom: 20px;
+}
+
+.wingspan-tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  background-color: #fefcf4; /* same as scorecard table background */
+  border-top: 1px solid #ccc;
+  z-index: 1000;
+}
+
+.wingspan-tabs button {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 16px;
+  font-family: 'Cormorant Garamond', serif;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #406343; /* header green */
+  border-right: 1px solid #ccc;
+}
+
+.wingspan-tabs button:last-child {
+  border-right: none;
+}
+
+.wingspan-tabs button.active {
+  background-color: #e6f2e6;
+  font-weight: bold;
+}
+
+
+.wingspan-tabs-banner {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  background-color: #f3f3f3;
+  border-top: 1px solid #ccc;
+  z-index: 999;
+}
+
+.wingspan-tabs-banner button {
+  flex: 1;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  background: none;
+  color: #406343;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.wingspan-tabs-banner button:hover {
+  background-color: #e0e0e0;
+}
+
+
+.bottom-tabs button {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  padding: 10px 15px;
+  font-size: 1em;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.bottom-tabs button.active {
+  background-color: #e3f2e1;
+  border-color: #406343;
+  font-weight: bold;
+}
+
+
+.score-summary-table {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.score-summary-table th,
+.score-summary-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.score-summary-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.centered-heading {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.screen-title {
+  line-height: 1.1;         /* Tighter vertical spacing */
+  margin-bottom: 10px;      /* Reduce bottom margin */
+}
+
+
+/* Landscape optimization */
+@media screen and (orientation: landscape) {
   #wingspan-section {
-    background-color: #f1efe7;
-    color: #3d3d3d;
-    font-family: 'Cormorant Garamond', serif;
-    padding: 20px;
-    min-height: 100vh;
-    width: 100vw;
-    box-sizing: border-box;
-    overflow-x: auto;
+    padding: 30px 60px;
+    font-size: 1.1rem;
   }
-  
-  #wingspan-section h1 {
-    font-size: 2.3rem;
-    color: #406343;
-    text-align: center;
-  }
-  
-  #wingspan-section table {
-    width: 100%;
-    table-layout: fixed;
-  }
-  
-  #wingspan-section table th,
-  #wingspan-section table td {
-    background-color: #fffdf8;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 0.95rem;
-    padding: 8px;
-  }
-  
-  #wingspan-section .editable-header {
-    background-color: #e9f5ea;
-    color: #5d7354;
-    font-style: italic;
-  }
-  
-  #wingspan-section .editable-header.filled {
-    color: #3b4b38;
-    font-style: normal;
-  }
-  
-  #wingspan-section .total {
-    background-color: #dff5dc;
-    font-weight: bold;
-  }
-  
-  @media screen and (orientation: landscape) {
-    #wingspan-section {
-      padding: 30px 60px;
-      font-size: 1.1rem;
-    }
-  }
-  
-  /* -----------------------------
-       Countdown Theme
-  ----------------------------- */
+}
+
+/* -----------------------------------
+   Countdown Theme 🚀
+----------------------------------- */
+#countdown-section {
+  background: radial-gradient(ellipse at center, #0d0d2b 0%, #000000 100%);
+  color: #e0e0ff;
+  font-family: 'Share Tech Mono', monospace;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+#countdown-section h1 {
+  font-size: 2.2rem;
+  text-align: center;
+  color: #ffeb3b;
+  text-shadow: 0 0 10px #ffe92f;
+}
+
+#countdown-section table th {
+  background-color: #1c1c3c;
+  color: #ffe600;
+}
+
+#countdown-section table td {
+  background-color: #2b2b4d;
+  color: #fff;
+}
+
+#countdown-section input,
+#countdown-section select {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+#countdown-section button {
+  background-color: #ff3d00;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 10px #ff3d00;
+}
+
+#countdown-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#countdown-section li {
+  background-color: #121232;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+.countdown-numbers {
+  font-size: 1.5em;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.countdown-label {
+  font-size: 1.2em;
+  font-style: italic;
+}
+
+
+/* Portrait optimization */
+@media screen and (orientation: portrait) {
   #countdown-section {
-    background: radial-gradient(ellipse at center, #0d0d2b 0%, #000000 100%);
-    color: #e0e0ff;
-    font-family: 'Share Tech Mono', monospace;
-    padding: 20px;
-    min-height: 100vh;
-  }
-  
-  #countdown-section h1 {
-    font-size: 2.2rem;
-    text-align: center;
-    color: #ffeb3b;
-    text-shadow: 0 0 10px #ffe92f;
-  }
-  
-  #countdown-section table th {
-    background-color: #5e5eae;
-    color: #ffe600;
-  }
-  
-  #countdown-section table td {
-    background-color: #2b2b4d;
-    color: #fff;
-  }
-  
-  #countdown-section input,
-  #countdown-section select {
-    background-color: #222;
-    color: #fff;
-    border: 1px solid #555;
-  }
-  
-  #countdown-section button {
-    background-color: #ff3d00;
-    color: #fff;
-    font-weight: bold;
-    box-shadow: 0 0 10px #ff3d00;
-  }
-  
-  #countdown-section ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  #countdown-section li {
-    background-color: #121232;
-    margin-bottom: 5px;
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #333;
-  }
-  
-  @media screen and (orientation: portrait) {
-    #countdown-section {
-      padding: 20px 16px;
-      font-size: 1rem;
-    }
-  }
-  
-  /* Reset Button (fixed at bottom) */
-  #reset-button {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    background-color: #444;
-    color: #fff;
-    font-size: 1rem;
-    padding: 12px 24px;
-    border-radius: 8px;
-    border: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: background 0.3s ease;
-  }
-  
-  #reset-button:hover {
-    background-color: #666;
-  }
-  
-  /* Hamburger Menu Icon */
-  #menu-icon {
-    position: fixed;
-    top: 10px;
-    left: 16px;
-    font-size: 2rem;
-    color: #333;
-    z-index: 1001;
-    cursor: pointer;
-  }
-  
-  /* Sidebar Styling */
-  #sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 220px;
-    height: 100%;
-    background-color: #ffffff;
-    box-shadow: none;
-    padding: 20px;
-    transition: transform 0.3s ease-in-out;
-    transform: translateX(-100%);
-    z-index: 1000;
-  }
-  
-  .sidebar-open #sidebar {
-    transform: translateX(0);
-  }
-  
-  #sidebar h2 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-  }
-  
-  #sidebar button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #efefef;
-    border-radius: 6px;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  
-  #sidebar button:hover {
-    background-color: #ddd;
-  }
-  
-  #sidebar .sidebar-group button {
-    display: block;
-    width: 100%;
-    margin: 5px 0;
-    text-align: left;
+    padding: 20px 16px;
     font-size: 1rem;
   }
-  
+}
