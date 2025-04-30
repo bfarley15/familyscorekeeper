@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Qwixx Scorecard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="sidebar.css" />
+  <link rel="stylesheet" href="styles3.css" />
+</head>
+<body>
+
+  <!-- Hamburger Icon -->
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+ 
+  
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-group">
+      <button onclick="window.location.href='index.html'">🕊 Wingspan</button>
+      <button onclick="window.location.href='countdown.html'">🚀 3-2-1 Countdown</button>
+      <button onclick="window.location.href='timer.html'">⏱ Timer</button>
+      <button onclick="window.location.href='qwixx.html'">🎲 Qwixx</button>
+    </div>
+  </div>
+
+   <!-- Reset Button -->
+   <div class="qwixx-container">
+    <h1 class="screen-title">QWIXX Scorecard</h1>
+    <button class="reset-button" onclick="resetQwixxGame()">Reset Game</button>
+    <button class="new-game" onclick="newQwixxGame()">New Game</button>
+  </div>
+
+  <!-- Scorecard -->
+  <div id="scorecard-container"></div>
+
+  <!-- Player Tabs -->
+  <div class="player-tabs">
+    <div class="player-tab" contenteditable="true">Player 1</div>
+    <div class="player-tab" contenteditable="true">Player 2</div>
+    <div class="player-tab" contenteditable="true">Player 3</div>
+    <div class="player-tab" contenteditable="true">Player 4</div>
+    <div class="player-tab" contenteditable="true">Player 5</div>
+  </div>
+
+  <!-- Final Scores -->
+  <div class="bottom-wrapper">
+    <div class="final-row">
+      <span class="totals-label">totals</span>
+      <div class="color-total red-total"></div>
+      <span class="operator">+</span>
+      <div class="color-total yellow-total"></div>
+      <span class="operator">+</span>
+      <div class="color-total green-total"></div>
+      <span class="operator">+</span>
+      <div class="color-total blue-total"></div>
+      <span class="operator">−</span>
+      <div class="penalty-total"></div>
+      <span class="operator">=</span>
+      <div class="grand-total"></div>
+
+      <div class="penalty-section-inline">
+        <div class="penalty-header-inline">
+          <span class="penalty-icon">❌🎲</span>
+          <span class="penalty-text">= -5</span>
+        </div>
+        <div class="penalty-boxes">
+          <div class="penalty-box"></div>
+          <div class="penalty-box"></div>
+          <div class="penalty-box"></div>
+          <div class="penalty-box"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="q-script.js"></script>
+
+  <!-- New Game Modal (Initially Hidden) -->
+<div id="newGameModal" class="modal">
+    <div class="modal-content">
+      <h2>Start New Game</h2>
+      <form id="playerNameForm">
+        <label>Player 1: <input type="text" name="player1" required /></label><br>
+        <label>Player 2: <input type="text" name="player2" /></label><br>
+        <label>Player 3: <input type="text" name="player3" /></label><br>
+        <label>Player 4: <input type="text" name="player4" /></label><br>
+        <label>Player 5: <input type="text" name="player5" /></label><br>
+        <button type="submit" class="modal-confirm">Start Game</button>
+      </form>
+      <button class="modal-close">Cancel</button>
+    </div>
+  </div>
+</body>
+</html>

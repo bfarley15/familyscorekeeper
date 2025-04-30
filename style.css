@@ -226,24 +226,87 @@ th, td {
 /* -----------------------------------
    Countdown Theme 🚀
 ----------------------------------- */
-#countdown-section {
-  background: radial-gradient(ellipse at center, #0d0d2b 0%, #000000 100%);
-  color: #e0e0ff;
-  font-family: 'Share Tech Mono', monospace;
-  padding: 20px;
-  min-height: 100vh;
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  background-color: black; /* fallback */
 }
 
-#countdown-section h1 {
-  font-size: 2.2rem;
+.countdown-title-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  color: #ffeb3b;
-  text-shadow: 0 0 10px #ffe92f;
+  width: 100%;
+}
+
+
+.countdown-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: perspective(250px) rotateX(25deg) scale(1.5);
+  transform-origin: center;
+  text-align: center;
+  margin-top: 20px;
+  gap: -2px; /* Reduces space between lines */
+}
+
+
+.countdown-title .line-one,
+.countdown-title .line-two {
+  font-family: 'Star Jedi', sans-serif;
+  color: #FFE81F;
+  text-shadow: 0 0 8px #000, 0 0 10px #000;
+  font-size: 2rem;
+  display: block;
+  text-align: center;
+  letter-spacing: -1px;
+  width: 12ch;
+  line-height: 1.1;
+  margin: 0; /* removes default space */
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#countdown-section {
+  max-width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  box-sizing: border-box;
+  background-image: url('images/rocket-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-image: url('images/rocket-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+#countdown-section table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+#countdown-section table th:nth-child(2),
+#countdown-section table td:nth-child(2) {
+  width: 60px;  /* or adjust to 50px, 70px, etc. */
 }
 
 #countdown-section table th {
   background-color: #1c1c3c;
   color: #ffe600;
+  padding: 1px;
 }
 
 #countdown-section table td {
@@ -289,7 +352,45 @@ th, td {
   font-style: italic;
 }
 
+.countdown-table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
 
+#countdown-input-table {
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.countdown-subheading {
+  font-family: 'Star Jedi', sans-serif;
+  color: #FFE81F;
+  text-shadow: 0 0 8px #000, 0 0 10px #000;
+  text-align: center;
+  letter-spacing: -1px;
+  font-size: inherit; /* preserves current size */
+  margin: 10px 0;
+  list-style: none;
+  padding: 0;
+}
+
+.round-title {
+  font-size: 2em;
+}
+
+.score-title {
+  font-size: 1.5em;
+}
+
+#countdown-content {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 /* Portrait optimization */
 @media screen and (orientation: portrait) {
   #countdown-section {

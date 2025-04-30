@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>3-2-1 Countdown</title>
+    <link href="https://fonts.cdnfonts.com/css/star-jedi" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="sidebar.css" />
+</head>
+
+<body>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+  <div id="sidebar">
+    <div class="sidebar-group">
+      <button onclick="window.location.href='index.html'">🕊 Wingspan</button>
+      <button onclick="window.location.href='countdown.html'">🚀 3-2-1 Countdown</button>
+      <button onclick="window.location.href='timer.html'">⏱ Timer</button>
+      <button onclick="window.location.href='qwixx.html'">🎲 Qwixx</button>
+    </div>
+  </div>
+
+<!-- COUNTDOWN SECTION -->
+<div id="countdown-section">
+  
+    <!-- TITLE WRAPPER -->
+    <div class="countdown-title-wrapper">
+        <h1 class="countdown-title">
+          <span class="line-one">3-2-1</span>
+          <span class="line-two">COUNTDOWN</span>
+        </h1>
+      </div>      
+      
+  
+    <!-- MAIN GAME CONTENT -->
+    <div class="countdown-table-wrapper" id="countdown-content">
+      <table id="countdown-input-table">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Hand Total</th>
+            <th>Countdown Y/N</th>
+            <th>Blastoff Y/N</th>
+          </tr>
+        </thead>
+        <tbody id="countdown-players"></tbody>
+      </table>
+  
+      <div class="bottom-tabs">
+        <button onclick="addCountdownPlayer()">+ Player</button>
+        <button onclick="removeCountdownPlayer()">− Player</button>
+        <button onclick="calculateCountdownScores()">Calculate</button>
+      </div>
+  
+      <h3 class="countdown-subheading round-title">Round <span id="current-round">1</span> of 5</h3>
+<h3 class="countdown-subheading score-title">Total Scores</h3>
+      <ul id="total-scores" class="countdown-subheading"></ul>
+      <ul id="countdown-results" class="countdown-subheading"></ul>
+      
+  
+      <div class="bottom-tabs">
+        <button onclick="previousRound()">← Previous Round</button>
+        <button onclick="nextRound()">Next Round</button>
+      </div>
+  
+      <div class="bottom-tabs">
+        <button onclick="clearPlayerNames()">Clear Names</button>
+        <button id="reset-button" onclick="resetGame()">Reset Game</button>
+      </div>
+    </div>
+  
+  </div>
+  
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      addCountdownPlayer();
+      addCountdownPlayer();
+      updateHamburgerColor();
+    });
+  </script>
+  
+  <script src="countdown-script.js"></script>
+</body>
+</html>
