@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skull King Scoreboard</title>
+  <link rel="stylesheet" href="sidebar.css" />
+  <link rel="stylesheet" href="skull.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <img src="images/SkullTitle.png" alt="Skull King Logo" class="logo" />
+    <nav class="nav-buttons">
+        <button class="new-game" onclick="window.location.href='skull.html'">Back to Game</button>
+        <button onclick="window.location.href='skullchart.html'">Chart</button>
+    </nav>
+  </header>
+
+  <!-- Hamburger Icon -->
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-group">
+      <button onclick="window.location.href='index.html'">🕊 Wingspan</button>
+      <button onclick="window.location.href='countdown.html'">🚀 3-2-1 Countdown</button>
+      <button onclick="window.location.href='timer.html'">⏱ Timer</button>
+      <button onclick="window.location.href='qwixx.html'">🎲 Qwixx</button>
+      <button onclick="window.location.href='skull.html'">💀 Skull King</button>
+    </div>
+  </div>
+
+  <!-- Scoreboard -->
+  <main class="scoreboard-page">
+    <h2>Scoreboard</h2>
+    <ul id="leaderboard" class="leaderboard"></ul>
+    <canvas id="scoreChart" height="280"></canvas>
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      document.body.classList.toggle("sidebar-open");
+    }
+
+    const roundData = JSON.parse(localStorage.getItem("skullRoundData") || "{}");
+    const playerNames = JSON.parse(localStorage.getItem("skullPlayerNames") || "[]");
+    const totalRounds = 10;
+
+    // 1. Render leaderboard
+    const totals = {};
+    for (let r = 1; r <= totalRounds; r++) {
+      if (roundData[r]) {
+        roundData[r].forEach(({ name, roundScore }) => {
+          totals[name] = (totals[name] || 0) + (roundScore || 0);
+        });
+      }
+    }
+
+    const leaderboard = document.getElementById("leaderboard");
+    [...playerNames].sort((a, b) => (totals[b] || 0) - (totals[a] || 0)).forEach(name => {
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${name}</strong><span>${totals[name] || 0}</span>`;
+      leaderboard.appendChild(li);
+    });
+
+    // 2. Render chart
+    const labels = Array.from({ length: totalRounds }, (_, i) => `R${i + 1}`);
+    const datasets = playerNames.map((name, index) => {
+      let runningTotal = 0;
+      const scores = [];
+      for (let r = 1; r <= totalRounds; r++) {
+        const round = roundData[r]?.find(e => e.name === name);
+        runningTotal += round?.roundScore || 0;
+        scores.push(runningTotal);
+      }
+      const colors = ['#F6BB11', '#70C172', '#F36F6F', '#557A95', '#9A68D0'];
+      return {
+        label: name,
+        data: scores,
+        fill: false,
+        borderColor: colors[index % colors.length],
+        tension: 0.2
+      };
+    });
+
+    const ctx = document.getElementById("scoreChart").getContext("2d");
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+
+  <style>
+    .scoreboard-page {
+      padding: 1rem;
+      background: #dbefff;
+      text-align: center;
+    }
+    .leaderboard {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+      max-width: 400px;
+      margin-inline: auto;
+    }
+    .leaderboard li {
+      display: flex;
+      justify-content: space-between;
+      background: white;
+      padding: 10px 16px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      font-family: 'Bokor', sans-serif;
+      font-size: 18px;
+    }
+    #scoreChart {
+      margin-top: 20px;
+      max-width: 90vw;
+    }
+  </style>
+</body>
+</html>

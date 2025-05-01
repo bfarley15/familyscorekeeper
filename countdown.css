@@ -1,0 +1,437 @@
+/* -----------------------------------
+   Base Reset and Shared Styles
+----------------------------------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    background-color: #f1efe7;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  
+  
+  html {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  
+  html, body {
+    min-height: 100vh;
+    height: auto;
+    background-color: #f1efe7;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Inputs, buttons, tables */
+  input, button, textarea {
+    font-family: inherit;
+  }
+  
+  button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 5px;
+  }
+  
+  input[type="text"],
+  input[type="number"] {
+    padding: 6px;
+    font-size: 1rem;
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+  
+  /* -----------------------------------
+     Wingspan Theme 🌿
+  ----------------------------------- */
+  #wingspan-section {
+    flex: 1; /* Allows this to fill available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px;
+    padding-bottom: 160px; /* Leaves space for bottom nav */
+    box-sizing: border-box;
+  }
+  
+  #wingspan-section h1 {
+    font-size: 2.5rem;
+    color: #406343;
+    text-align: center;
+  }
+  
+  #wingspan-section table th,
+  #wingspan-section table td {
+    background-color: #fffdf8;
+  }
+  
+  .editable-header {
+    padding: 4px 8px;              /* Reduce vertical & horizontal padding */
+    min-width: 60px;               /* Prevent stretching too wide */
+    max-width: 100px;              /* Limit how wide a name can go */
+    overflow: hidden;              /* Hide overflow text */
+    text-overflow: ellipsis;      /* Show "..." if name is too long */
+    white-space: nowrap;          /* Prevent line breaks */
+  }
+  
+  
+  #wingspan-section .editable-header {
+    background-color: #e9f5ea;
+    color: #5d7354;
+    font-style: italic;
+  }
+  
+  #wingspan-section .editable-header.filled {
+    color: #3b4b38;
+    font-style: normal;
+  }
+  
+  #wingspan-section .total {
+    background-color: #dff5dc;
+    font-weight: bold;
+  }
+  
+  .bottom-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .wingspan-tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    background-color: #fefcf4; /* same as scorecard table background */
+    border-top: 1px solid #ccc;
+    z-index: 1000;
+  }
+  
+  .wingspan-tabs button {
+    flex: 1;
+    padding: 12px 0;
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #406343; /* header green */
+    border-right: 1px solid #ccc;
+  }
+  
+  .wingspan-tabs button:last-child {
+    border-right: none;
+  }
+  
+  .wingspan-tabs button.active {
+    background-color: #e6f2e6;
+    font-weight: bold;
+  }
+  
+  
+  .wingspan-tabs-banner {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    background-color: #f3f3f3;
+    border-top: 1px solid #ccc;
+    z-index: 999;
+  }
+  
+  .wingspan-tabs-banner button {
+    flex: 1;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    background: none;
+    color: #406343;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .wingspan-tabs-banner button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  
+  .bottom-tabs button {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .bottom-tabs button.active {
+    background-color: #e3f2e1;
+    border-color: #406343;
+    font-weight: bold;
+  }
+  
+  
+  .score-summary-table {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .score-summary-table th,
+  .score-summary-table td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: center;
+  }
+  
+  .score-summary-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .centered-heading {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .screen-title {
+    line-height: 1.1;         /* Tighter vertical spacing */
+    margin-bottom: 10px;      /* Reduce bottom margin */
+  }
+  
+  .wingspan-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 60px; /* extra space above bottom tabs */
+    background-color: #f1efe7; /* match the Wingspan theme background */
+  }
+  
+  #wingspan-scorecard-tab {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  @media screen and (orientation: landscape) {
+    #wingspan-section {
+      padding: 30px 60px 140px;
+      font-size: 1.1rem;
+      min-height: 100vh;
+    }
+  
+    table {
+      table-layout: fixed;
+    }
+  
+    th, td {
+      word-wrap: break-word;
+      max-width: 120px;
+    }
+  }
+  
+  
+  
+  /* -----------------------------------
+     Countdown Theme 🚀
+  ----------------------------------- */
+  body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    background-color:#000831; /* fallback */
+  }
+  
+  .countdown-title-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+  
+  
+  .countdown-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: perspective(250px) rotateX(25deg) scale(1.5);
+    transform-origin: center;
+    text-align: center;
+    margin-top: 20px;
+    gap: -2px; /* Reduces space between lines */
+  }
+  
+  
+  .countdown-title .line-one,
+  .countdown-title .line-two {
+    font-family: 'Star Jedi', sans-serif;
+    color: #FFE81F;
+    text-shadow: 0 0 8px #000, 0 0 10px #000;
+    font-size: 2rem;
+    display: block;
+    text-align: center;
+    letter-spacing: -1px;
+    width: 12ch;
+    line-height: 1.1;
+    margin: 0; /* removes default space */
+  }
+  
+  body, html {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
+  #countdown-section {
+    max-width: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    box-sizing: border-box;
+    background-size: cover;
+    background-position: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  
+  #countdown-section table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  #countdown-section table th:nth-child(2),
+  #countdown-section table td:nth-child(2) {
+    width: 60px;  /* or adjust to 50px, 70px, etc. */
+  }
+  
+  #countdown-section table th {
+    background-color: #1c1c3c;
+    color: #ffe600;
+    padding: 1px;
+  }
+  
+  #countdown-section table td {
+    background-color: #2b2b4d;
+    color: #fff;
+  }
+  
+  #countdown-section input,
+  #countdown-section select {
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #555;
+  }
+  
+  #countdown-section button {
+    background-color: #ff3d00;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0 10px #ff3d00;
+  }
+  
+  #countdown-section ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  #countdown-section li {
+    background-color: #121232;
+    margin-bottom: 5px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #333;
+  }
+  
+  .countdown-numbers {
+    font-size: 1.5em;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+  
+  .countdown-label {
+    font-size: 1.2em;
+    font-style: italic;
+  }
+  
+  .countdown-table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  
+  #countdown-input-table {
+    width: 100%;
+    table-layout: fixed;
+    word-wrap: break-word;
+  }
+  
+  .countdown-subheading {
+    font-family: 'Star Jedi', sans-serif;
+    color: #FFE81F;
+    text-shadow: 0 0 8px #000, 0 0 10px #000;
+    text-align: center;
+    letter-spacing: -1px;
+    font-size: inherit; /* preserves current size */
+    margin: 10px 0;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .round-title {
+    font-size: 2em;
+  }
+  
+  .score-title {
+    font-size: 1.5em;
+  }
+  
+  #countdown-content {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Portrait optimization */
+  @media screen and (orientation: portrait) {
+    #countdown-section {
+      padding: 20px 16px;
+      font-size: 1rem;
+    }
+  }
+  

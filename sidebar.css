@@ -1,16 +1,23 @@
+/* Default hamburger style (for all pages) */
 .hamburger {
     position: fixed;
     top: 10px;
     left: 10px;
-    font-size: 24px;
-    background: #444;
-    color: black;
+    font-size: 28px;
+    background: none;
     border: none;
-    padding: 10px 14px;
-    border-radius: 6px;
-    z-index: 1001;
     cursor: pointer;
+    z-index: 1100;
+    color: #000; /* default */
   }
+  
+  /* Countdown-specific override */
+  .countdown-page .hamburger {
+    color: #FFE81F !important;  /* Star Wars yellow */
+    text-shadow: 0 0 8px #000, 0 0 10px #000;
+    font-family: 'Star Jedi', sans-serif;
+  }
+  
   
   #sidebar {
     position: fixed;

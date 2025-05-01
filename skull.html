@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Skull King</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bokor&family=Poppins" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="sidebar.css" />
+  <link rel="stylesheet" href="skull.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <img src="images/SkullTitle.png" alt="Skull King Logo" class="logo" />
+    <nav class="nav-buttons">
+        <button class="new-game">New Game</button>
+        <button onclick="window.location.href='skullchart.html'">Chart</button>
+
+    </nav>
+  </header>
+
+  <!-- Hamburger Icon -->
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-group">
+      <button onclick="window.location.href='index.html'">🕊 Wingspan</button>
+      <button onclick="window.location.href='countdown.html'">🚀 3-2-1 Countdown</button>
+      <button onclick="window.location.href='timer.html'">⏱ Timer</button>
+      <button onclick="window.location.href='qwixx.html'">🎲 Qwixx</button>
+      <button onclick="window.location.href='skull.html'">💀 Skull King</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="scorecard">
+    <div class="round-indicator">
+      Round <span id="currentRound">1</span> of 10
+    </div>
+
+    <!-- This will be filled dynamically by JS -->
+    <div class="player-cards"></div>
+
+    <div class="bottom-tabs">
+      <button class="previous-round" onclick="previousRound()">Previous Round</button>
+      <button onclick="calculateSkullScores()">Calculate</button>
+      <button class="next-round" onclick="nextRound()">Next Round</button>
+    </div>
+  </main>
+
+  <div id="lootModal" style="display:none;" class="loot-modal">
+    <div class="modal-content">
+      <h3 id="lootModalTitle">How many loot cards succeeded?</h3>
+      <input id="lootInput" type="text" inputmode="numeric" pattern="[0-9]*" />
+      <div class="modal-buttons">
+        <button id="lootCancel">Cancel</button>
+        <button id="lootSubmit">Submit</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal injected by JS -->
+  <script src="skull-script.js"></script>
+
+</body>
+</html>

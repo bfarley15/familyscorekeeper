@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>3-2-1 Countdown</title>
     <link href="https://fonts.cdnfonts.com/css/star-jedi" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="countdown.css" />
   <link rel="stylesheet" href="sidebar.css" />
 </head>
 
-<body>
+<body class="countdown-page">
   <button class="hamburger" onclick="toggleSidebar()">☰</button>
 
   <div id="sidebar">
@@ -18,11 +18,14 @@
       <button onclick="window.location.href='countdown.html'">🚀 3-2-1 Countdown</button>
       <button onclick="window.location.href='timer.html'">⏱ Timer</button>
       <button onclick="window.location.href='qwixx.html'">🎲 Qwixx</button>
+      <button onclick="window.location.href='skull.html'">💀 Skull King</button>
     </div>
   </div>
 
 <!-- COUNTDOWN SECTION -->
 <div id="countdown-section">
+    <div class="background-overlay"></div>
+    <div class="countdown-content">
   
     <!-- TITLE WRAPPER -->
     <div class="countdown-title-wrapper">
@@ -70,7 +73,8 @@
       </div>
     </div>
   
-  </div>
+</div>
+</div>
   
   
   <script>

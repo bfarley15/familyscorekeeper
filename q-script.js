@@ -15,6 +15,20 @@ document.addEventListener('DOMContentLoaded', function () {
   updatePlayerTabs();
   setupTabListeners();
   updateHamburgerColor();
+
+  document.addEventListener("click", (event) => {
+    const sidebar = document.getElementById("sidebar");
+    const hamburger = document.querySelector(".hamburger");
+  
+    const clickedInsideSidebar = sidebar.contains(event.target);
+    const clickedHamburger = hamburger.contains(event.target);
+  
+    if (document.body.classList.contains("sidebar-open") &&
+        !clickedInsideSidebar && !clickedHamburger) {
+      document.body.classList.remove("sidebar-open");
+    }
+  });
+  
 });
 
 // -----------------------------
