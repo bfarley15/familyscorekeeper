@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Hanabi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="hanabi.css" />
+  <link rel="stylesheet" href="sidebar.css" />
+</head>
+<body>
+
+  <!-- Hamburger Icon -->
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+ 
+  
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-group">
+      <button onclick="window.location.href='index.html'">🕊 Wingspan</button>
+      <button onclick="window.location.href='countdown.html'">🚀 3-2-1 Countdown</button>
+      <button onclick="window.location.href='timer.html'">⏱ Timer</button>
+      <button onclick="window.location.href='qwixx.html'">🎲 Qwixx</button>
+      <button onclick="window.location.href='skull.html'">💀 Skull King</button>
+      <button onclick="window.location.href='hanabi.html'">🎆 Hanabi</button>
+    </div>
+  </div>
+
+ <!-- Hanabi Game Interface -->
+<div id="hanabi-container">
+    <h1 class="hanabi-title">Hanabi</h1>
+  
+    <div class="tracker">
+      <h2>💡 Hints Available</h2>
+      <div class="counter">
+        <button onclick="changeHints(-1)">−</button>
+        <span id="hint-count">8</span>
+        <button onclick="changeHints(1)">+</button>
+      </div>
+    </div>
+  
+    <div class="tracker">
+      <h2>🔥 Fuses Lost</h2>
+      <div class="counter">
+        <span id="fuse-count">0</span>
+        <button onclick="addFuse()">Add Mistake</button>
+      </div>
+    </div>
+  
+    <div style="text-align: center; margin-top: 20px;">
+      <button onclick="resetHanabiGame()">Reset Game</button>
+    </div>
+  </div>
+  
+  <!-- Game Over Modal -->
+  <div id="gameOverModal" class="modal">
+    <div class="modal-content">
+      <h2>💥 Game Over!</h2>
+      <p>You've used all 3 fuses.</p>
+      <button onclick="resetHanabiGame()">Restart Game</button>
+    </div>
+  </div>
+  
+  <script>
+    let hintCount = 8;
+    let fuseCount = 0;
+  
+    function updateDisplay() {
+      document.getElementById('hint-count').textContent = hintCount;
+      document.getElementById('fuse-count').textContent = fuseCount;
+    }
+  
+    function changeHints(change) {
+      hintCount = Math.max(0, Math.min(8, hintCount + change));
+      updateDisplay();
+    }
+  
+    function addFuse() {
+      if (fuseCount < 3) {
+        fuseCount++;
+        updateDisplay();
+        if (fuseCount === 3) {
+          document.getElementById('gameOverModal').style.display = 'flex';
+        }
+      }
+    }
+  
+    function resetHanabiGame() {
+      hintCount = 8;
+      fuseCount = 0;
+      updateDisplay();
+      document.getElementById('gameOverModal').style.display = 'none';
+    }
+
+    function toggleSidebar() {
+  document.body.classList.toggle("sidebar-open");
+}
+
+function showTab(tabName) {
+  document.getElementById("wingspan-section").style.display = tabName === "wingspan" ? "block" : "none";
+  document.getElementById("countdown-section").style.display = tabName === "countdown" ? "block" : "none";
+  updateHamburgerColor(); // ← add this line
+}
+
+
+function selectGame(tabName) {
+  showTab(tabName);
+  toggleSidebar();
+}
+
+function toggleWingspanMenu() {
+  const menu = document.getElementById("wingspan-submenu");
+  menu.style.display = menu.style.display === "none" ? "block" : "none";
+}
+
+function updateHamburgerColor() {
+  const activeHeader = document.querySelector('#wingspan-section').style.display !== "none"
+    ? document.querySelector('#wingspan-section .screen-title')
+    : document.querySelector('#countdown-section .screen-title');
+
+  const color = window.getComputedStyle(activeHeader).color;
+  document.querySelector(".hamburger").style.color = color;
+}
+  
+    // Initialize display
+    updateDisplay();
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,76 @@
+body {
+    margin: 0;
+    font-family: 'Share Tech Mono', sans-serif;
+    background-color: #3D3C88; /* Hanabi dark blue-purple */
+    color: #fdfdfd;
+  }
+  
+  #hanabi-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+  }
+  
+  .hanabi-title {
+    font-family: 'Rock Salt', cursive;
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-top: 0;             /* move it closer to the top */
+    margin-bottom: 8px;
+    border-bottom: 3px solid #ffe600; /* bright yellow underline */
+    display: inline-block;     /* ensures underline matches width of text only */
+    padding-bottom: -10px;       /* space between text and underline */
+  }  
+  
+  .tracker {
+    font-family: 'Rock Salt', cursive;
+    margin: 1px 0;
+    font-size: 1.5 rem;
+  }
+  
+  .counter {
+    font-family: 'Rock Salt', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    font-size: 4rem;
+  }
+  
+  button {
+    font-family: 'Rock Salt', cursive;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: #ffe600;
+    color: #17123a;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .modal {
+    font-family: 'Rock Salt', cursive;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    font-family: 'Rock Salt', cursive;
+    background: #fff;
+    color: #17123a;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
