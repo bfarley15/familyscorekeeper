@@ -19,12 +19,14 @@
 ],
 "screenshots": [
   {
-    "src": "screenshot-1.png",
+    "src": "screenshots/screenshot-1.png",
     "sizes": "1280x720",
     "type": "image/png",
-    "form_factor": "wide"
+    "form_factor": "wide",
+    "label": "Scorecard view"
   }
 ]
+
 
   }
   

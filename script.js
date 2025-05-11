@@ -15,8 +15,6 @@ let wingspanPlayerCount = 2;
 // -----------------------------
 window.addEventListener("load", () => {
   showTab("wingspan");
-  addCountdownPlayer();
-  addCountdownPlayer();
   updateRunningScoreboard();
   const headerCells = document.querySelectorAll(".editable-header");
   if (headerCells[0]) headerCells[0].focus();
@@ -397,7 +395,8 @@ function resetBrandonMeridianScoreboard() {
 // PWA Service Worker
 // -----------------------------
 if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("sw.js").then(() => {
-   console.log("✅ Service Worker Registered");
+  navigator.serviceWorker.register("sw.js").then(() => {
+    console.log("✅ Service Worker Registered");
   });
- }
+}
+
