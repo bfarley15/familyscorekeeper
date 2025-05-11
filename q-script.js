@@ -293,7 +293,14 @@ function updateHamburgerColor() {
 }
 
 
-
+document.addEventListener("focusin", e => {
+  const el = e.target;
+  if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  }
+});
 
 
 // Add modal HTML to page ---- keep at the bottom of q-script.js

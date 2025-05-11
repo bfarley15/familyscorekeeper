@@ -21,6 +21,10 @@
     margin-bottom: 1.5rem;
   }
   
+  input, textarea, select {
+    -webkit-user-select: auto;
+  }
+  
   .logo {
     width: 60%;
     max-width: 300px;

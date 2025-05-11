@@ -132,6 +132,15 @@ function loadRound(roundNumber) {
   document.getElementById("current-round").textContent = roundNumber;
 }
 
+document.addEventListener("focusin", e => {
+  const el = e.target;
+  if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  }
+});
+
 function nextRound() {
   if (currentRound >= maxRounds) {
     alert("Game over! You've completed all 5 rounds.");

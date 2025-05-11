@@ -152,6 +152,10 @@ th, td {
   font-weight: bold;
 }
 
+input, textarea, select {
+  -webkit-user-select: auto;
+}
+
 
 .wingspan-tabs-banner {
   position: fixed;

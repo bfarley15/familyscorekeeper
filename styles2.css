@@ -27,6 +27,10 @@ body, html {
   justify-content: center;
 }
 
+input, textarea, select {
+  -webkit-user-select: auto;
+}
+
 .timer-svg {
   position: absolute; /* 🛠️ This makes it overlap inside timer-container */
   top: 0;

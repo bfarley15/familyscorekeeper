@@ -53,6 +53,11 @@ body {
     font-weight: bold;
   }
   
+  input, textarea, select {
+    -webkit-user-select: auto;
+  }
+  
+
   .modal {
     font-family: 'Rock Salt', cursive;
     position: fixed;

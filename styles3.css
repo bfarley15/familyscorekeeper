@@ -285,6 +285,11 @@ h1 {
     overflow: auto;
     background-color: rgba(0,0,0,0.4);
   }
+
+  input, textarea, select {
+    -webkit-user-select: auto;
+  }
+  
   
   .modal-content {
     background-color: #fefefe;

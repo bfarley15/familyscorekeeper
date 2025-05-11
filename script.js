@@ -254,7 +254,14 @@ function drawWinHistoryChart() {
 }
 
 
-
+document.addEventListener("focusin", e => {
+  const el = e.target;
+  if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  }
+});
 
 
 function updateBrandonMeridianScoreboard() {
