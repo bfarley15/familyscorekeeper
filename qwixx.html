@@ -33,6 +33,7 @@
     <h1 class="screen-title">QWIXX Scorecard</h1>
     <button class="reset-button" onclick="resetQwixxGame()">Reset Game</button>
     <button class="new-game" onclick="newQwixxGame()">New Game</button>
+  <button class="undo-move" onclick="undoMove()">Undo Move</button>
   </div>
 
   <!-- Scorecard -->
@@ -62,39 +63,28 @@
       <div class="penalty-total"></div>
       <span class="operator">=</span>
       <div class="grand-total"></div>
-
-      <div class="penalty-section-inline">
-        <div class="penalty-header-inline">
-          <span class="penalty-icon">❌🎲</span>
-          <span class="penalty-text">= -5</span>
-        </div>
-        <div class="penalty-boxes">
-          <div class="penalty-box"></div>
-          <div class="penalty-box"></div>
-          <div class="penalty-box"></div>
-          <div class="penalty-box"></div>
-        </div>
-      </div>
     </div>
   </div>
 
+
+   <!-- New Game Modal (Initially Hidden) -->
+<div id="newGameModal" class="modal">
+  <div class="modal-content">
+    <h2>Start New Game</h2>
+    <form id="playerNameForm">
+      <label>Player 1: <input type="text" name="player1" required /></label><br>
+      <label>Player 2: <input type="text" name="player2" /></label><br>
+      <label>Player 3: <input type="text" name="player3" /></label><br>
+      <label>Player 4: <input type="text" name="player4" /></label><br>
+      <label>Player 5: <input type="text" name="player5" /></label><br>
+      <button type="submit" class="modal-confirm">Start Game</button>
+    </form>
+    <button class="modal-close">Cancel</button>
+  </div>
+</div>
   <!-- Scripts -->
   <script src="q-script.js"></script>
 
-  <!-- New Game Modal (Initially Hidden) -->
-<div id="newGameModal" class="modal">
-    <div class="modal-content">
-      <h2>Start New Game</h2>
-      <form id="playerNameForm">
-        <label>Player 1: <input type="text" name="player1" required /></label><br>
-        <label>Player 2: <input type="text" name="player2" /></label><br>
-        <label>Player 3: <input type="text" name="player3" /></label><br>
-        <label>Player 4: <input type="text" name="player4" /></label><br>
-        <label>Player 5: <input type="text" name="player5" /></label><br>
-        <button type="submit" class="modal-confirm">Start Game</button>
-      </form>
-      <button class="modal-close">Cancel</button>
-    </div>
-  </div>
+ 
 </body>
 </html>

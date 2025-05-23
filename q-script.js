@@ -7,81 +7,97 @@ let players = new Array(5).fill(null).map((_, i) => ({
   name: `Player ${i + 1}`
 }));
 
+const moveHistory = {
+  player0: [],
+  player1: [],
+  player2: [],
+  player3: [],
+  player4: []
+};
+
 // -----------------------------
 // On Page Load
 // -----------------------------
 document.addEventListener('DOMContentLoaded', function () {
-  switchPlayer(0); // show first player's board
+  switchPlayer(0);
   updatePlayerTabs();
   setupTabListeners();
   updateHamburgerColor();
 
+  // Open modal when "New Game" is clicked
+  document.querySelector('.new-game').addEventListener('click', newQwixxGame);
+
+  // Close modal when "Cancel" button is clicked
+  document.querySelector('.modal-close').addEventListener('click', () => {
+    document.getElementById('newGameModal').classList.remove('open');
+  });
+
+  // Handle form submission
+  document.getElementById('playerNameForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    for (let i = 0; i < 5; i++) {
+      const name = formData.get(`player${i + 1}`)?.trim();
+      players[i].name = name || `Player ${i + 1}`;
+      players[i].html = '';
+      moveHistory[`player${i}`] = [];
+    }
+
+    document.getElementById('newGameModal').classList.remove('open');
+    resetQwixxGame();
+    updatePlayerTabs();
+  });
+
+  // Sidebar close on click outside
   document.addEventListener("click", (event) => {
     const sidebar = document.getElementById("sidebar");
     const hamburger = document.querySelector(".hamburger");
-  
-    const clickedInsideSidebar = sidebar.contains(event.target);
-    const clickedHamburger = hamburger.contains(event.target);
-  
-    if (document.body.classList.contains("sidebar-open") &&
-        !clickedInsideSidebar && !clickedHamburger) {
+    if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
       document.body.classList.remove("sidebar-open");
     }
   });
-  
 });
+
+// -----------------------------
+// New Game Modal Trigger
+// -----------------------------
+function newQwixxGame() {
+  document.getElementById('newGameModal').classList.add('open');
+}
 
 // -----------------------------
 // Player Tabs
 // -----------------------------
 function updatePlayerTabs() {
-    const tabs = document.querySelectorAll('.player-tab');
-    tabs.forEach((tab, i) => {
-      // Only overwrite if not actively editing
-      if (document.activeElement !== tab) {
-        tab.textContent = players[i].name || `Player ${i + 1}`;
-      }
-      tab.classList.toggle('active', i === currentPlayer);
-    });
-  }
-  
+  const tabs = document.querySelectorAll('.player-tab');
+  tabs.forEach((tab, i) => {
+    if (document.activeElement !== tab) {
+      tab.textContent = players[i].name || `Player ${i + 1}`;
+    }
+    tab.classList.toggle('active', i === currentPlayer);
+  });
+}
 
 function setupTabListeners() {
-    const tabs = document.querySelectorAll('.player-tab');
-  
-    tabs.forEach((tab, i) => {
-      // Handle switching scorecards
-      tab.addEventListener('click', (e) => {
-        if (!tab.isContentEditable || document.activeElement !== tab) {
-          switchPlayer(i);
-        }
-      });
-  
-      // Clear placeholder on focus
-      tab.addEventListener('focus', () => {
-        const defaultName = `Player ${i + 1}`;
-        if (tab.textContent.trim() === defaultName) {
-          tab.textContent = '';
-        }
-      });
-  
-      // Save name on blur
-      tab.addEventListener('blur', () => {
-        const newName = tab.textContent.trim();
-        players[i].name = newName || `Player ${i + 1}`;
-        updatePlayerTabs();
-      });
-  
-      // Pressing Enter should blur instead of inserting line breaks
-      tab.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          tab.blur();
-        }
-      });
+  const tabs = document.querySelectorAll('.player-tab');
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => switchPlayer(i));
+    tab.addEventListener('focus', () => {
+      if (tab.textContent.trim() === `Player ${i + 1}`) tab.textContent = '';
     });
-  }
-  
+    tab.addEventListener('blur', () => {
+      players[i].name = tab.textContent.trim() || `Player ${i + 1}`;
+      updatePlayerTabs();
+    });
+    tab.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        tab.blur();
+      }
+    });
+  });
+}
 
 // -----------------------------
 // Switch Player
@@ -98,45 +114,46 @@ function switchPlayer(index) {
 }
 
 // -----------------------------
-// Generate Scorecard HTML
+// Scorecard & Interactions
 // -----------------------------
 function generateScorecardHTML() {
   return `
     <div class="scorecard">
-      <div class="row red">
-        <div class="arrow">▶️</div>
-        <div class="boxes">${[2,3,4,5,6,7,8,9,10,11,12].map(n => `<div class="box">${n}</div>`).join('')}
-          <div class="lock">🔒</div>
+      ${['red', 'yellow', 'green', 'blue'].map(color => {
+        const numbers = (color === 'red' || color === 'yellow')
+          ? [2,3,4,5,6,7,8,9,10,11,12]
+          : [12,11,10,9,8,7,6,5,4,3,2];
+        return `
+          <div class="row ${color}">
+            <div class="arrow">▶️</div>
+            <div class="boxes">
+              ${numbers.map(n => `<div class="box">${n}</div>`).join('')}
+              <div class="lock">🔒</div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+
+      <!-- Move penalty section inside scorecard -->
+      <div class="penalty-section-inline">
+        <div class="penalty-header-inline">
+          <span class="penalty-icon">❌🎲</span>
+          <span class="penalty-text">= -5</span>
         </div>
-      </div>
-      <div class="row yellow">
-        <div class="arrow">▶️</div>
-        <div class="boxes">${[2,3,4,5,6,7,8,9,10,11,12].map(n => `<div class="box">${n}</div>`).join('')}
-          <div class="lock">🔒</div>
-        </div>
-      </div>
-      <div class="row green">
-        <div class="arrow">▶️</div>
-        <div class="boxes">${[12,11,10,9,8,7,6,5,4,3,2].map(n => `<div class="box">${n}</div>`).join('')}
-          <div class="lock">🔒</div>
-        </div>
-      </div>
-      <div class="row blue">
-        <div class="arrow">▶️</div>
-        <div class="boxes">${[12,11,10,9,8,7,6,5,4,3,2].map(n => `<div class="box">${n}</div>`).join('')}
-          <div class="lock">🔒</div>
+        <div class="penalty-boxes">
+          <div class="penalty-box"></div>
+          <div class="penalty-box"></div>
+          <div class="penalty-box"></div>
+          <div class="penalty-box"></div>
         </div>
       </div>
     </div>
   `;
 }
 
-// -----------------------------
-// Scorecard Interactions
-// -----------------------------
+
 function setupScorecardInteractions() {
   const rows = document.querySelectorAll('.row');
-
   rows.forEach(row => {
     const boxes = row.querySelectorAll('.box');
     const lock = row.querySelector('.lock');
@@ -158,6 +175,12 @@ function setupScorecardInteractions() {
           }
         }
 
+        moveHistory[`player${currentPlayer}`].push({
+          row: row.classList[1],
+          index: idx,
+          type: 'mark'
+        });
+
         checkLockUnlock(row);
       });
     });
@@ -168,7 +191,6 @@ function setupScorecardInteractions() {
           lock.classList.add('marked');
           lock.style.backgroundColor = 'black';
           lock.style.color = 'white';
-          lock.style.cursor = 'not-allowed';
 
           boxes.forEach(box => {
             if (!box.classList.contains('marked')) {
@@ -179,28 +201,98 @@ function setupScorecardInteractions() {
             }
           });
 
+          moveHistory[`player${currentPlayer}`].push({
+            row: row.classList[1],
+            type: 'lock'
+          });
+
           updateScore();
         }
       });
     }
   });
 
-  document.querySelectorAll('.penalty-box').forEach(box => {
+  document.querySelectorAll('.penalty-box').forEach((box, index) => {
     box.addEventListener('click', () => {
-      box.classList.toggle('marked');
-      box.style.backgroundColor = box.classList.contains('marked') ? 'black' : 'white';
+      const isNowMarked = !box.classList.contains('marked');
+      box.classList.toggle('marked', isNowMarked);
+      box.style.backgroundColor = isNowMarked ? 'black' : 'white';
+
+      moveHistory[`player${currentPlayer}`].push({
+        type: 'penalty',
+        index
+      });
+
       updateScore();
     });
   });
 }
 
+function undoMove() {
+  const history = moveHistory[`player${currentPlayer}`];
+  if (!history.length) return;
+
+  const lastMove = history.pop();
+  const scorecard = document.getElementById("scorecard-container");
+
+  if (lastMove.type === 'mark') {
+    const row = scorecard.querySelector(`.${lastMove.row}`);
+    const boxes = row.querySelectorAll('.box');
+
+    boxes[lastMove.index].classList.remove('marked');
+    boxes[lastMove.index].removeAttribute('style');
+
+    for (let i = 0; i < boxes.length; i++) {
+      if (i < lastMove.index && !boxes[i].classList.contains('marked')) {
+        boxes[i].classList.remove('disabled');
+        boxes[i].removeAttribute('style');
+      }
+    }
+
+    checkLockUnlock(row);
+  } else if (lastMove.type === 'lock') {
+    const row = scorecard.querySelector(`.${lastMove.row}`);
+    const lock = row.querySelector('.lock');
+    lock.classList.remove('marked');
+    lock.removeAttribute('style');
+    row.querySelectorAll('.box').forEach(box => {
+      if (!box.classList.contains('marked')) {
+        box.classList.remove('disabled');
+        box.removeAttribute('style');
+      }
+    });
+
+    checkLockUnlock(row);
+  } else if (lastMove.type === 'penalty') {
+    const box = document.querySelectorAll('.penalty-box')[lastMove.index];
+    box.classList.remove('marked');
+    box.style.backgroundColor = 'white';
+  }
+
+  updateScore();
+}
+
+function resetQwixxGame() {
+  for (let i = 0; i < 5; i++) {
+    moveHistory[`player${i}`] = [];
+    players[i].html = ''; // Clear scorecard content
+  }
+
+  // Regenerate the visible scorecard for the current player
+  document.getElementById("scorecard-container").innerHTML = generateScorecardHTML();
+  setupScorecardInteractions();
+  updateScore();
+  updatePlayerTabs();
+}
+
+
 // -----------------------------
-// Lock Logic
+// Logic Helpers
 // -----------------------------
 function checkLockUnlock(row) {
   const boxes = row.querySelectorAll('.box');
   const lock = row.querySelector('.lock');
-  const markedCount = Array.from(boxes).filter(box => box.classList.contains('marked')).length;
+  const markedCount = [...boxes].filter(b => b.classList.contains('marked')).length;
 
   if (markedCount >= 5) {
     lock.classList.add('unlocked');
@@ -215,73 +307,35 @@ function checkLockUnlock(row) {
   updateScore();
 }
 
-// -----------------------------
-// Scoring Logic
-// -----------------------------
 function updateScore() {
   const colors = ['red', 'yellow', 'green', 'blue'];
-  const totals = { red: 0, yellow: 0, green: 0, blue: 0 };
+  const totals = {};
 
   colors.forEach(color => {
     const row = document.querySelector(`.${color}`);
-    const markedCount = row.querySelectorAll('.marked').length;
-    totals[color] = calculateQwixxScore(markedCount);
-
+    const count = row.querySelectorAll('.marked').length;
+    totals[color] = count <= 1 ? count : (count * (count + 1)) / 2;
     const box = document.querySelector(`.${color}-total`);
     if (box) box.textContent = totals[color];
   });
 
-  const penalties = document.querySelectorAll('.penalty-box.marked').length;
-  const penaltyScore = penalties * 5;
-  document.querySelectorAll('.penalty-total').forEach(e => e.textContent = `-${penaltyScore}`);
+  const penaltyBoxes = document.querySelector('#scorecard-container .penalty-boxes');
+const penaltyCount = penaltyBoxes
+  ? penaltyBoxes.querySelectorAll('.penalty-box.marked').length
+  : 0;
+
+  const penaltyScore = penaltyCount * 5;
+  document.querySelectorAll('.penalty-total').forEach(el => el.textContent = `-${penaltyScore}`);
 
   const total = Object.values(totals).reduce((a, b) => a + b, 0) - penaltyScore;
-  const totalBox = document.querySelector('.grand-total');
-  if (totalBox) totalBox.textContent = total;
-}
-
-function calculateQwixxScore(count) {
-  return count <= 1 ? count : (count * (count + 1)) / 2;
+  document.querySelector('.grand-total').textContent = total;
 }
 
 // -----------------------------
-// Reset
-// -----------------------------
-function resetQwixxGame() {
-    // Keep current player names, reset their scorecard HTML
-    players.forEach((p, i) => {
-      p.html = ''; // clear scorecard content
-    });
-    currentPlayer = 0;
-  
-    // Regenerate the first player's scorecard
-    document.getElementById("scorecard-container").innerHTML = generateScorecardHTML();
-    setupScorecardInteractions();
-    updatePlayerTabs();
-    updateScore();
-  
-    // Reset totals
-    document.querySelectorAll('.color-total').forEach(cell => cell.textContent = '');
-    document.querySelectorAll('.penalty-total').forEach(cell => cell.textContent = '');
-    const grand = document.querySelector('.grand-total');
-    if (grand) grand.textContent = '';
-  
-    // Reset penalty boxes
-    document.querySelectorAll('.penalty-box').forEach(box => {
-      box.classList.remove('marked');
-      box.style.backgroundColor = 'white';
-    });
-  
-    alert("Qwixx game reset.");
-  }
-  
-  
-
-// -----------------------------
-// Utility
+// UI Utility
 // -----------------------------
 function toggleSidebar() {
-  document.body.classList.toggle('sidebar-open');
+  document.body.classList.toggle("sidebar-open");
 }
 
 function updateHamburgerColor() {
@@ -291,76 +345,3 @@ function updateHamburgerColor() {
     document.querySelector('.hamburger').style.color = color;
   }
 }
-
-
-document.addEventListener("focusin", e => {
-  const el = e.target;
-  if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
-    setTimeout(() => {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
-  }
-});
-
-
-// Add modal HTML to page ---- keep at the bottom of q-script.js
-document.body.insertAdjacentHTML('beforeend', `<!-- New Game Modal (Initially Hidden) -->
-<div id="newGameModal" class="modal">
-  <div class="modal-content">
-    <h2>Start New Game</h2>
-    <form id="playerNameForm">
-      <label>Player 1: <input type="text" name="player1" required /></label><br>
-      <label>Player 2: <input type="text" name="player2" /></label><br>
-      <label>Player 3: <input type="text" name="player3" /></label><br>
-      <label>Player 4: <input type="text" name="player4" /></label><br>
-      <label>Player 5: <input type="text" name="player5" /></label><br>
-      <button type="submit" class="modal-confirm">Start Game</button>
-    </form>
-    <button class="modal-close">Cancel</button>
-  </div>
-</div>`);
-
-// Show modal when New Game button is clicked
-document.querySelector('.new-game').addEventListener('click', () => {
-  document.getElementById('newGameModal').style.display = 'block';
-});
-
-// Handle cancel button
-document.querySelector('.modal-close').addEventListener('click', () => {
-  document.getElementById('newGameModal').style.display = 'none';
-});
-
-// Handle form submission
-document.getElementById('playerNameForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const names = Array.from(form.elements).slice(0, 5).map(el => el.value.trim()).filter(Boolean);
-
-  if (names.length === 0) {
-    alert('Please enter at least one player name.');
-    return;
-  }
-
-  // Update global state
-  players = names.map((name, i) => ({ name, html: '' }));
-  while (players.length < 5) {
-    players.push({ name: `Player ${players.length + 1}`, html: '' });
-  }
-  currentPlayer = 0;
-  switchPlayer(0);
-
-  // Update player tabs as buttons (not editable)
-  const tabContainer = document.querySelector('.player-tabs');
-  tabContainer.innerHTML = '';
-  players.forEach((player, i) => {
-    const tab = document.createElement('div');
-    tab.className = 'player-tab';
-    tab.textContent = player.name;
-    tab.addEventListener('click', () => switchPlayer(i));
-    tabContainer.appendChild(tab);
-  });
-
-  updatePlayerTabs();
-  updateScore();
-  document.getElementById('newGameModal').style.display = 'none';
-});
